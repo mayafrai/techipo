@@ -1,0 +1,842 @@
+<html>
+<head>
+<title>Project 2</title>
+<script src="https://d3js.org/d3.v4.min.js"> </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
+<link rel="stylesheet" type="text/css" href="all.css" media="all"/>
+<style>
+
+.axisLeft line {
+  stroke: white;
+}
+
+.axisLeft path {
+  stroke: none;
+}
+
+.axisLeft text {
+  fill: white;
+}
+
+.axisBottom line {
+  stroke: white;
+}
+
+.axisBottom path {
+  stroke: white;
+}
+
+.axisBottom text {
+  fill: white;
+}
+
+.tip {
+  line-height: 1.5;
+  font-family: Helvetica;
+  font-size: 12px;
+  padding: 15px;
+  background: #191C24;
+  color: white;
+  border-radius: 4px;
+  border: 1px solid white;
+  /* box-shadow: 0 2px 3px 0 #646464, 0 2px 5px 0 #646464; */
+}
+
+</style>
+   <h1 id="ques">What do high performing tech companies have in common?</h1>
+   <p id="tag1"> Take a look at 42 of the largest tech companies and how they have increased/decreased in valuation since their <a href="https://www.investopedia.com/university/ipo/ipo.asp">IPO</a> date. We wanted to show the relationship between high valuations and factors like employee satisfaction and diversity.
+   </p>
+   <p id="tag2"> Based on our analysis, you can clearly tell who the top players in the industry are. We encourage you to take a closer look at these companies. Start from their IPO, view what they're currently valued at, and play around with factors that some of these major players share. </p>
+
+<div id="button-div"> </div>
+<div id="button-div2"> </div>
+<svg id="graph1"></svg>
+<div id="legend1"></div>
+<br>
+<svg id="graph2"></svg>
+
+<!-- factors buttons -->
+<p id="factor-info"> <strong>See which companies share the following factors </strong></p>
+<p id="info"> The top cluster will show companies that have that factor and the bottom cluster(s) <br/> will show companies that do not share that factor or their data is not public. </p>
+<div id="factor-wrap">
+  <div id="button-div3"> </div>
+  <div id="button-div4"> </div>
+  <div id="button-div5"> </div>
+  <div id="button-div6"> </div>
+  <div id="button-div7"> </div>
+  <div id="button-div8"> </div>
+</div>
+
+<p id="click"> <strong>Click on a circle to view the company profile</strong></p>
+
+<div id="title">
+  <div id="legend2">
+  </div>
+</div>
+<div id="bubble-wrap">
+  <div id=chart>
+    <svg id="bubblechart"></svg>
+  </div>
+  <div id="company-profile">
+<div id="wrap1">
+  <div id="logo-name">
+    <div id="img">
+      <img alt="fb logo" src="images/Facebook.png" id="logo"/>
+    </div>
+    <p id="name"> Facebook </p>
+  </div>
+  <div id="values">
+    <p id="ipoVal"> IPO Valuation: </p>
+    <p id="currentVal"> Current Valuation: </p>
+    <p id="percent"> Percent Change: </p>
+
+  </div>
+</div>
+<p id="emp"> Employee Diversity </p>
+<div class="diversity-wrap">
+  <div id="female">
+    <p> 33% <br/>Female</p>
+  </div>
+
+  <div id="male">
+    <p> 33% <br/>Male </p>
+  </div>
+
+  <div id="minority">
+    <p> 33% <br/>Minority </p>
+  </div>
+</div>
+
+<p id="biz"> Business Metrics </p>
+<div class="diversity-wrap">
+  <div id="roi">
+    <p> 33% <br/>ROI 5-Yr Avg</p>
+  </div>
+  <div id="investors">
+    <p> 55 <br/>Investors </p>
+  </div>
+
+  <div id="acquire">
+    <p> 70 <br/>Acquistions </p>
+  </div>
+</div>
+
+<p id="satis"> Employee Satisfaction </p>
+<div class="diversity-wrap">
+  <div id="glassdoor">
+    <p> 4.5 Stars <br/>Glassdoor</p>
+  </div>
+  <div id="recommend">
+    <p> 45 <br/>Recommend to <br/>a Friend</p>
+  </div>
+  <div id="ceo">
+    <p> 85 <br/>Approve of CEO</p>
+  </div>
+
+</div>
+</div>
+</div>
+<svg id="bubblechart2"></svg>
+<script>
+
+    // 1. Create button
+    var button = document.createElement("button")
+    button.innerHTML = "View Current Valuations";
+    // 2. Append to div
+    var body = document.getElementsByTagName("div")[0];
+    body.appendChild(button);
+
+    // 3. Add event handler
+    button.addEventListener ("click", function() {
+      var graph1 = document.getElementById("graph1");
+      var graph2 = document.getElementById("graph2");
+      var bubbleChart = document.getElementById("bubblechart");
+      var bubbleChart2 = document.getElementById("bubblechart2");
+      var title = document.getElementById("title");
+      var profile = document.getElementById("company-profile");
+      var factor1 = document.getElementById("button-div3");
+      var factor2 = document.getElementById("button-div4");
+      var factor3 = document.getElementById("button-div5");
+      var factor4 = document.getElementById("button-div6");
+      var factor5 = document.getElementById("button-div7");
+      var factor6 = document.getElementById("button-div8");
+      var legend1 = document.getElementById("legend1");
+      var currval_button = document.getElementById("button-div");
+      var IPOval_button = document.getElementById("button-div2");
+      var factor_info = document.getElementById("factor-info");
+      var click = document.getElementById("click");
+      var info = document.getElementById("info");
+
+      graph2.style.display = "block"
+      bubbleChart.style.display = "block"
+      graph1.style.display = "none";
+      legend1.style.display = "block";
+      bubblechart2.style.display = "none";
+      title.style.display = "block";
+      profile.style.display = "none";
+      factor1.style.display = "block";
+      factor2.style.display = "block";
+      factor3.style.display = "block";
+      factor4.style.display = "block";
+      factor5.style.display = "block";
+      factor6.style.display = "block";
+      currval_button.style.display = "none";
+      IPOval_button.style.display = "block";
+      factor_info.style.display = "block";
+      click.style.display = "block";
+      info.style.display = "block";
+    });
+
+    // 1. Create button
+    var button2 = document.createElement("button")
+    button2.innerHTML = "View IPO Valuations";
+    // 2. Append to div
+    var body2 = document.getElementById("button-div2");
+    body2.appendChild(button2);
+
+    // 3. Add event handler
+    button2.addEventListener ("click", function() {
+      var graph1 = document.getElementById("graph1");
+      var graph2 = document.getElementById("graph2");
+      var bubbleChart = document.getElementById("bubblechart");
+      var bubbleChart2 = document.getElementById("bubblechart2");
+      var title = document.getElementById("title");
+      var profile = document.getElementById("company-profile");
+      var factor1 = document.getElementById("button-div3");
+      var factor2 = document.getElementById("button-div4");
+      var factor3 = document.getElementById("button-div5");
+      var factor4 = document.getElementById("button-div6");
+      var factor5 = document.getElementById("button-div7");
+      var factor6 = document.getElementById("button-div8");
+      var legend1 = document.getElementById("legend1");
+      var currval_button = document.getElementById("button-div");
+      var IPOval_button = document.getElementById("button-div2");
+      var factor_info = document.getElementById("factor-info");
+      var click = document.getElementById("click");
+      var info = document.getElementById("info");
+
+      graph2.style.display = "none"
+      bubblechart2.style.display = "none";
+      bubbleChart.style.display = "none"
+      graph1.style.display = "block"
+      legend1.style.display = "block";
+      title.style.display = "none"
+      profile.style.display = "none";
+      factor1.style.display = "none";
+      factor2.style.display = "none";
+      factor3.style.display = "none";
+      factor4.style.display = "none";
+      factor5.style.display = "none";
+      factor6.style.display = "none";
+      currval_button.style.display = "block";
+      IPOval_button.style.display = "none";
+      factor_info.style.display = "none";
+      click.style.display = "none";
+      info.style.display = "none";
+
+    });
+
+  //  FACTORS BUTTONS
+  // 1. Create button
+    var female_button = document.createElement("button")
+    female_button.innerHTML = ">35% Female Employees";
+    // 2. Append to div
+    var body3 = document.getElementById("button-div3");
+    body3.appendChild(female_button);
+
+    var stars_button = document.createElement("button")
+    stars_button.innerHTML = "4+ Stars on Glassdoor";
+    var body4 = document.getElementById("button-div8");
+    body4.appendChild(stars_button);
+
+
+    var acq_button = document.createElement("button")
+    acq_button.innerHTML = "10+" + "<br/>"+ "Acquisitions";
+    var body4 = document.getElementById("button-div5");
+    body4.appendChild(acq_button);
+
+
+    var roi_button = document.createElement("button")
+    roi_button.innerHTML = "Positive Returns" + "<br/>"+"On Investments";
+    var body4 = document.getElementById("button-div7");
+    body4.appendChild(roi_button);
+
+
+    var inv_button2 = document.createElement("button")
+    inv_button2.innerHTML = "10+" + "<br/>"+"Investors";
+    var body4 = document.getElementById("button-div6");
+    body4.appendChild(inv_button2);
+
+
+    var min_button = document.createElement("button")
+    min_button.innerHTML = ">40% Minority Employees";
+    var body4 = document.getElementById("button-div4");
+    body4.appendChild(min_button);
+
+    function mutateRow(row) {
+      row["Name"] =  row["Name"];
+      row["Industry"] = row["Color"];
+      row["Color"] =  row["Color2"];
+      row["Ticker"] = row["Ticker"];
+      row["Date"] = Number(row["Date of IPO"]);
+      row["valIPO"] = Number(row["Value at IPO, $B/M"])
+      row["radius"] = Number(row["Circle Radius at IPO"])
+      row["IPOtip"] = row["Value at IPO, Number"]
+      row["sharePrice"] = row["IPO Share Price (USD)"]
+      row["radius_now"] = Number(row["Circle Radius Now"]);
+      row["valIPO_now"] = Number(row["Value Now, $B"]);
+      row["valChange"] = Number(row["Value Change (%)"])
+      row["IPOnow_tip"] = row["Value Now, Number"];
+
+      // variables for factors dataset
+      row["female_bool"] = row[">35% Female Employees"];
+      row["female_val"] = row["Percentage of Female Employees"];
+      row["male_val"] = row["Percentage of Male Employees"];
+      row["glassdoor_bool"] = row["4+ Stars on Glassdoor"];
+      row["glassdoor_val"] = row["Stars on Glassdoor"];
+      row["roi_val"] = Number(row["ROI, 5-Yr Average (%)"]);
+      row["acq_bool"] = row["10+ Acquisitions"];
+      row["acq_val"] = row["Number of Acquisitions"];
+      row["invest_bool"] = row["60+ Investments"];
+      row["invest_val"] = row["Number of Investments"];
+      row["investors_bool"] = row["10+ Investors"];
+      row["investors_val"] = row["Number of Investors"];
+      row["minor_bool"] = row[">40% Minority Employees"];
+      row["minor_val"] = row["Percentage of Minority Employees"];
+      row["recommend"] = row["Recommend to Friend"];
+      row["ceo"] = row["Approve of CEO"];
+      row["percentColor"] = row["Percent Color"];
+
+      return row;
+    }
+
+    var dict;
+    function callback(error, data) {
+      var padding = 220;
+      var maxChange = data[0].valChange/(2018-data[0].Date);
+
+      // for bubblechart
+      var valChange_Scale = d3.scaleLinear().domain([-100,0]).range([Math.sqrt(maxChange),0]);
+
+      dict = data.map(function(d) {
+        return {
+          Name: d.Name,
+          Radius: d.radius_now,
+          Color: d.Color,
+          IPO_Val: d.IPOtip,
+          Val_now: d.IPOnow_tip,
+          Avg_change_val: (d.valChange >= 0 ? Math.sqrt(d.valChange/(2018-d.Date)) : valChange_Scale(d.valChange)),
+          Percent_change: d.valChange,
+          Female: d.female_val,
+          Female_Bool: d.female_bool,
+          Male: d.male_val,
+          Minority: d.minor_val,
+          Minority_Bool: d.minor_bool,
+          Investor: d.investors_val,
+          Investor_Bool: d.investors_bool,
+          Investments: d.invest_val,
+          Investments_Bool: d.invest_bool,
+          Acquistions: d.acq_val,
+          Acquistions_Bool: d.acq_bool,
+          Stars: d.glassdoor_val,
+          Stars_Bool: d.glassdoor_bool,
+          ROI_Val: (d.roi_val == 0 ? "Not Available." : d.roi_val),
+          Recommend: d.recommend,
+          Approve: d.ceo,
+        }
+      })
+
+      // create svg plot
+      var svg = d3.select("#graph1")
+      .attr("height", 150 + 2 * padding).attr("width", 600 + 2 * padding)
+      .append("g").attr("transform", "translate(" + (padding-50) + "," + 135 + ")");
+
+      // create scales
+      var xScale = d3.scaleLinear()
+      .domain([1970,2018]).range([0, 800]);
+
+      var yScale = d3.scaleLinear()
+      .domain( [Math.log(6000000), Math.log(240000000000)] )
+      .range([300, 0]);
+
+      var xAxis = d3.axisBottom(xScale)
+      .tickFormat(d3.format("d"))
+
+      var yAxis = d3.axisLeft(yScale)
+
+      var log_valuesIPO = []; //used in the graph
+      data.forEach(function(d,i) {
+        // Drew tip documentation from http://bl.ocks.org/Caged/6476579.
+        var tip = d3.tip()
+        .attr("class", "tip")
+        .offset([-10, 0])
+        .html("<strong>" + d.Date + "</strong>" + "<br/>" + "<strong>" + "Name: " + "</strong>" + d.Name + "<br/>" + "<strong>" + "IPO Valuation: " + "</strong>" + d.IPOtip + "<strong>" + "<br/>" + "IPO Share Price: " + "</strong>" + "$" + d.sharePrice)
+        svg.call(tip);
+
+        log_valuesIPO.push(Math.log(d.valIPO));
+
+        var circles = svg.append("circle")
+        .attr("cx", xScale(d.Date) + Math.random()*(800*0.02))
+        .attr("cy", 40) //This position will change with transition()
+        .attr("r", 14)
+        .attr("id", d.Name)
+        .style("fill", "white")
+        .on("mouseover", tip.show)
+        .on("mouseout", tip.hide)
+
+        circles.transition() // Call Transition Method
+        .duration(1000) // Set Duration timing (ms)
+        .ease(d3.easeLinear) // Set Easing option
+        .style("fill", d.Industry)
+        .attr("cy", yScale(log_valuesIPO[i]));
+
+        var text = svg.append("text")
+        .attr("text-anchor", "middle")
+        .attr("x", xScale(d.Date))
+        .attr("y", yScale(log_valuesIPO[i])-20)
+        .style("font-family", "sans-serif")
+        .style("font-size", 10)
+        .style("fill", "white")
+        .text(d.Name);
+
+        svg.append("g")
+        .attr("transform", "translate(-10,0)")
+        .attr("class", "axisLeft")
+        .call(yAxis);
+
+        svg.append("g")
+        .attr("class", "axisBottom")
+        .attr("transform", "translate(0,320)")
+        .call(xAxis);
+
+      })
+
+      svg.append("text").attr("transform", "translate(0, -50)").text("Valuations At The Time Of IPO").style("fill", "white");
+      svg.append("text").attr("transform", "rotate(270) translate(-150, -70)").text("Log Company Valuations ($Bn)").style("fill", "white").style("text-anchor", "middle");;
+      svg.append("text").attr("transform", "translate(330, 380)").text("Year of IPO").style("fill", "white");
+
+      // Drew legend documentation from http://bl.ocks.org/ZJONSSON/3918369.
+      //Legend1
+      var colorVals = ["#ff0000", "#e87881", "#FFA500", "#f9f22a","#73f15a", "#5bd0fb", "#210be5","#bd10e0","#f788c7"]
+      var industryVals= ["ecommerce", "entertainment", "fintech", "data & analytics", "consumer products", "social media", "software", "high tech", "hardware"];
+
+      d3.select("#legend1").append("svg")
+      .attr("id", "svgL")
+      .attr("width","150")
+      .attr("height","400");
+
+      var svgL = d3.select("#svgL");
+
+      for (i = 0; i < 9; i++){
+        svgL.append("rect")
+        .attr("x", 0)
+        .attr("y", 0+30*i)
+        .attr("height", 15)
+        .attr("width", 15)
+        .attr("stroke-width", 1)
+        .attr("fill", colorVals[i]);
+
+        svgL.append("text")
+        .text(industryVals[i])
+        .attr("x", 20)
+        .attr("y", 7.5 +30*i)
+        .attr("font-size", 12)
+        .attr("text-anchor","start")
+        .style("fill", "white")
+        .attr("alignment-baseline","middle");
+      }
+
+      // graph 2 showing current valuations
+      // create svg plot
+      var svg = d3.select("#graph2")
+      .attr("height", 130 + 2 * padding).attr("width", 600 + 2 * padding)
+      .append("g").attr("transform", "translate(" + (padding-50) + "," + 113 + ")");
+
+      // create scales
+      var xScale = d3.scaleLinear()
+      .domain([1970,2018]).range([0, 800]);
+
+      var yScale = d3.scaleLinear()
+      .domain( [Math.log(673000000), Math.log(8.6372E+11)] )
+      .range([300, 0]);
+
+      var xAxis = d3.axisBottom(xScale)
+      .tickFormat(d3.format("d"))
+
+      var yAxis = d3.axisLeft(yScale)
+
+      var log_valuesNow = []
+      data.forEach(function(d,i) {
+        var tip = d3.tip()
+        .attr("class", "tip")
+        .offset([-10, 0])
+        .html("<strong>" + "2018" + "</strong>" + "<br/>" + "<strong>" + "Name: " + "</strong>" + d.Name + "<br/>" + "<strong>" + "Current Valuation: " + "</strong>" + d.IPOnow_tip + "<strong>")
+        svg.call(tip);
+
+        log_valuesNow.push(Math.log(d.valIPO_now))
+
+        var circles = svg.append("circle")
+        .attr("cx", xScale(d.Date) + Math.random() * (800*0.02))
+        .attr("cy", yScale(log_valuesIPO[i]))
+        .attr("r", 14)
+        .attr("id", d.Name)
+        .style("fill", "white")
+        .on("mouseover", tip.show)
+        .on("mouseout", tip.hide)
+
+        circles.transition() // Call Transition Method
+        .duration(2500) // Set Duration timing (ms)
+        .ease(d3.easeLinear) // Set Easing option
+        .style("fill", d.Industry)
+        .attr("cy", yScale(log_valuesNow[i]));
+
+        var text = svg.append("text")
+        .attr("x", xScale(d.Date)+8)
+        .attr("y", yScale(log_valuesNow[i])-20)
+        .style("font-family", "sans-serif")
+        .style("font-size", 10)
+        .style("fill", "white")
+        .attr("text-anchor", "middle")
+        .text(d.Name);
+
+        svg.append("g")
+        .attr("transform", "translate(-10,0)")
+        .attr("class", "axisLeft")
+        .call(yAxis);
+
+        svg.append("g")
+        .attr("class", "axisBottom")
+        .attr("transform", "translate(0,320)")
+        .call(xAxis);
+
+      // Drew documentation on forced bubblechart from Mimno Lecture 03/30.
+      // FORCE BUBBLE CHART STARTS HERE
+      var radiusScale = d3.scaleSqrt().domain([0,Math.sqrt(maxChange)]).range([0,50]);
+      var incRadius = 10;
+      var profile = document.getElementById("company-profile");
+
+      var svg2 = d3.select("#bubblechart")
+        .attr("height",240 + 2 * padding).attr("width", 200 + 2 * padding)
+        .append("g").attr("transform", "translate(" + (10) + "," + 0 + ")")
+        .attr("class", "bubble");
+
+      // Define the physics of the simulation
+      var forceX = d3.forceX((200 + 2 * padding)/2);
+      var forceY = d3.forceY((240 + 2 * padding)/3);
+      var simulation;
+
+      function runSimulation() {
+        simulation = d3.forceSimulation()
+        .force("x", forceX)
+        .force("y", forceY)
+        .force("collide", d3.forceCollide(function(d) {
+          return radiusScale(d.Avg_change_val) + incRadius + 1;
+        }));
+
+        simulation
+        .nodes(dict)
+        .on("tick", updateDisplay)
+      }
+      runSimulation();
+
+      var circles = svg2.selectAll("circle").data(dict).enter().append("circle")
+      .attr("r", function (d) { return radiusScale(d.Avg_change_val) + incRadius; })
+      .style("fill", function (d) { return d.Color; })
+      .on("click", function(d) {
+          profile.style.display = "block";
+
+          var name = document.getElementById("name");
+          name.innerHTML = d.Name;
+
+          var currentVal = document.getElementById("currentVal");
+          currentVal.innerHTML = "<strong>" + "Current Valuation: " + "</strong>" + d.Val_now;
+
+          var ipoVal = document.getElementById("ipoVal");
+          ipoVal.innerHTML = "<strong>" + "IPO Valuation: " + "</strong>" + d.IPO_Val;
+
+          var percent = document.getElementById("percent");
+          percent.innerHTML = "<strong>" + "Percent Change: " + "</strong>" + d.Percent_change + "%";
+          percent.style.color = d.Color;
+
+          var female = document.getElementById("female");
+          female.innerHTML = "<p>" + d.Female + "<br/>" + "Female" + "</p>";
+
+          var male = document.getElementById("male");
+          male.innerHTML = "<p>" + d.Male + "<br/>" + "Male" + "</p>";
+
+          var minority = document.getElementById("minority");
+          minority.innerHTML = "<p>" + d.Minority + "<br/>" + "Minority" + "</p>";
+
+          var roi = document.getElementById("roi");
+          roi.innerHTML = "<p>" + d.ROI_Val + "<br/>" + "ROI 5-Yr Avg" + "</p>";
+
+          var investor = document.getElementById("investors");
+          investor.innerHTML = "<p>" + d.Investor + "<br/>" + "Investors" + "</p>";
+
+          var acquire = document.getElementById("acquire");
+          acquire.innerHTML = "<p>" + d.Acquistions + "<br/>" + "Acquisitions" + "</p>";
+
+          var stars = document.getElementById("glassdoor");
+          stars.innerHTML = "<p>" + d.Stars + "<br/>" + "Stars on Glassdoor" + "</p>";
+
+          var recommend = document.getElementById("recommend");
+          recommend.innerHTML = "<p>" + d.Recommend + "<br/>" + "Recommend to" + "<br/>" + "a Friend" + "</p>";
+
+          var ceo = document.getElementById("ceo");
+          ceo.innerHTML = "<p>" + d.Approve + "<br/>" + "Approve of CEO" + "</p>";
+
+          var logo = document.getElementById("logo");
+          var source = "images/" + d.Name + ".png";
+          logo.src = source;
+        })
+        .on("mouseover", function(d) {
+          d3.select(this).style("cursor", "pointer");
+        })
+
+      var names = svg2.selectAll("text").data(dict).enter().append("text")
+      .text(function(d) { return d.Name })
+      .style("fill", "white")
+      .style("text-anchor", "middle")
+      .style("vertical-align", "middle");
+
+      function updateDisplay() {
+        circles
+        .attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; })
+        names
+        .style("font-size", function(d) {
+          if (radiusScale(d.Avg_change_val) <= 15) {
+            return d.Name == "Shopify" || d.Name == "Alphabet" || d.Name == "Zendesk" || d.Name == "Salesforce" ? 10 : d.Name == "Sensata Tech" || d.Name == "Tableau Software" ? 5 : radiusScale(d.Avg_change_val);
+          } else if (radiusScale(d.Avg_change_val) <= 20) {
+            return d.Name == "Workday" ? 11 : 13;
+          } else if (radiusScale(d.Avg_change_val) <= 25) {
+            return d.Name == "Microsoft" ? 13 : 18;
+          } else {
+            return d.Name == "Snap, Inc" || d.Name == "Amazon" ? 16 : 23;
+          }
+        })
+        .attr("x", function(d) { return d.x; })
+        .attr("y", function(d) { return d.y; })
+      }
+
+      //Add event listener for factor buttons
+      //>35% Female Employees Button
+      female_button.addEventListener("click", function() {
+      forceY = d3.forceY(function(d) {
+        if (d.Female_Bool == "TRUE") {
+          return 150;
+        } else if (d.Female_Bool == "FALSE") {
+          return 320;
+        } else {
+          return 500;
+        }
+      });
+      simulation
+        .force("y", forceY.strength(0.025))
+        .alphaTarget(0.1)
+        .restart();
+      });
+
+      female_button.addEventListener("click", function() {
+      forceX = d3.forceX(function(d) {
+        if (d.Female_Bool == "TRUE") {
+          return 440;
+        } else if (d.Female_Bool == "FALSE") {
+          return 160;
+        } else {
+          return 430;
+        }
+      });
+      simulation
+        .force("x", forceX.strength(0.025))
+        .alphaTarget(0.1)
+        .restart();
+      });
+
+      //4+ Stars on Grassdoor Button
+      stars_button.addEventListener("click", function() {
+      forceY = d3.forceY(function(d) {
+        if (d.Stars_Bool == "TRUE") {
+          return 120;
+        } else {
+          return 440;
+        }
+      });
+      simulation
+        .force("y", forceY.strength(0.0075))
+        .force("x", d3.forceX((200 + 2 * padding)/2).strength(0.0075))
+        .force("collide", d3.forceCollide(function(d) {
+          return radiusScale(d.Avg_change_val) + incRadius + 1;
+        }).strength(0.9))
+        .alphaTarget(0.8)
+        .restart();
+      });
+
+      //10+ Acquisitions Button
+      acq_button.addEventListener("click", function() {
+      forceY = d3.forceY(function(d) {
+        if (d.Acquistions_Bool == "TRUE") {
+          return 185;
+        } else {
+          return 525;
+        }
+      });
+      simulation
+        .force("y", forceY.strength(0.025))
+        .force("x", d3.forceX((200 + 2 * padding)/2).strength(0.025))
+        .alphaTarget(0.1)
+        .restart();
+      });
+
+      //Positive ROI Button
+      roi_button.addEventListener("click", function() {
+      forceY = d3.forceY(function(d) {
+        if (d.ROI_Val > 0) {
+          return 180;
+        } else if (d.ROI_Val < 0) {
+          return 505;
+        } else {
+          return 325;
+        }
+      });
+      simulation
+        .force("y", forceY.strength(0.05))
+        .alphaTarget(0.15)
+        .restart();
+      });
+
+      roi_button.addEventListener("click", function() {
+      forceX = d3.forceX(function(d) {
+        if (d.ROI_Val > 0) {
+          return 410;
+        } else if (d.ROI_Val < 0) {
+          return 410;
+        } else {
+          return 180;
+        }
+      });
+      simulation
+        .force("x", forceX.strength(0.025))
+        .alphaTarget(0.1)
+        .restart();
+      });
+
+      //10+ Investors Button
+      inv_button2.addEventListener("click", function() {
+      forceY = d3.forceY(function(d) {
+        if (d.Investor_Bool == "TRUE") {
+          return 165;
+        } else {
+          return 505;
+        }
+      });
+      simulation
+        .force("y", forceY.strength(0.025))
+        .force("x", d3.forceX((200 + 2 * padding)/2).strength(0.025))
+        .alphaTarget(0.1)
+        .restart();
+      });
+
+      //>40% Minority Button
+      min_button.addEventListener("click", function() {
+      forceY = d3.forceY(function(d) {
+        if (d.Minority_Bool == "TRUE") {
+          return 130;
+        } else if (d.Minority_Bool == "FALSE") {
+          return 510;
+        } else {
+          return 320;
+        }
+      });
+      simulation
+        .force("y", forceY.strength(0.025))
+        .alphaTarget(0.1)
+        .restart();
+      });
+
+    min_button.addEventListener("click", function() {
+    forceX = d3.forceX(function(d) {
+      if (d.Minority_Bool == "TRUE") {
+        return 440;
+      } else if (d.Minority_Bool == "FALSE") {
+        return 440;
+      } else {
+        return 200;
+      }
+    });
+    simulation
+      .force("x", forceX.strength(0.025))
+      .alphaTarget(0.1)
+      .restart();
+    });
+
+})
+    svg.append("text").attr("transform", "translate(0, -50)").text("Valuations In 2018").style("fill", "white");
+    svg.append("text").attr("transform", "rotate(270) translate(-150, -70)").text("Log Company Valuations ($Bn)").style("fill", "white").style("text-anchor", "middle");
+    svg.append("text").attr("transform", "translate(330, 380)").text("Year of IPO").style("fill", "white");
+
+
+      //Legend2
+      var red_blue = ["#5968FF", "#F62536"]
+      var text_vals= ["Valuation Increased", "Valuation Decreased", "Radius = Size of Inc/Dec"];
+
+      d3.select("#legend2").append("svg")
+      .attr("id", "svgL2")
+      .attr("width","500")
+      .attr("height","40");
+
+      var svgL2 = d3.select("#svgL2");
+
+      svgL2.append("rect")
+      .attr("x", 2)
+      .attr("y", 0)
+      .attr("height", 15)
+      .attr("width", 15)
+      .attr("stroke-width", 1)
+      .attr("fill", red_blue[0]);
+
+      svgL2.append("text")
+      .text(text_vals[0])
+      .attr("x", 22)
+      .attr("y", 12)
+      .attr("font-size", 14)
+      .attr("text-anchor","start")
+      .style("fill", "white");
+
+      svgL2.append("rect")
+      .attr("x", 160)
+      .attr("y", 0)
+      .attr("height", 15)
+      .attr("width", 15)
+      .attr("stroke-width", 1)
+      .attr("fill", red_blue[1]);
+
+      svgL2.append("text")
+      .text(text_vals[1])
+      .attr("x", 180)
+      .attr("y", 12)
+      .attr("font-size", 14)
+      .attr("text-anchor","start")
+      .style("fill", "white");
+
+      svgL2.append("circle")
+      .attr("cx", 330)
+      .attr("cy", 7.5)
+      .attr("r", 6.5)
+      .attr("stroke-width", 2)
+      .attr("stroke", "white")
+
+      svgL2.append("text")
+      .text(text_vals[2])
+      .attr("x", 345)
+      .attr("y", 12)
+      .attr("font-size", 14)
+      .attr("text-anchor","start")
+      .style("fill", "white");
+}
+
+d3.csv("IPOdata-final.csv", mutateRow, callback);
+
+    </script>
+  </body>
+</html>
