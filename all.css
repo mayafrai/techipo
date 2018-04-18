@@ -1,0 +1,336 @@
+body {
+  background-color: #191C24;
+  font-family: Avenir,Arial,sans-serif;
+  overflow-x: hidden;
+}
+
+#ques {
+  color: #5968FF;
+}
+
+#tag1 {
+  width: 28%;
+  float: left;
+  margin-top: 40px;
+  margin-bottom: 60px;
+  color: white;
+  margin-left: 260px;
+  text-align: left;
+}
+
+#tag2 {
+  margin-top: 40px;
+  margin-right: 240px;
+  margin-bottom: 60px;
+  width: 30%;
+  float: right;
+  color: white;
+  text-align: left;
+}
+
+a {
+  color: white;
+}
+
+p {
+  color: white;
+  text-align: center;
+  font-size: 14px;
+}
+
+h1 {
+  margin-top: 60px;
+  color: white;
+  text-align: center;
+  font-size: 28px;
+}
+
+#bubblechart2 {
+  display: none;
+}
+
+#bubblechart {
+  display: none;
+}
+
+#graph2 {
+  display: none;
+}
+
+/* legend css */
+#graph1 {
+  float: left;
+  display: block;
+}
+
+#legend1 {
+  float: right;
+  margin-right: 40px;
+  margin-top: 120px;
+}
+
+#button-div2 {
+  margin-left: 500px;
+  margin-right: 500px;
+  margin-top: 16px;
+  text-align: center;
+  display: none;
+}
+
+#button-div {
+  margin-left: 500px;
+  margin-right: 500px;
+  margin-top: 16px;
+  text-align: center;
+  display: block;
+}
+
+button {
+  font-family: Avenir,Arial,sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  width: 100%;
+  padding: 8px 9px;
+  border-radius: 6px;
+  background-color: #F6F6F6;
+  color: #191C24;
+}
+
+/* factors buttons */
+
+#factor-info {
+  text-align: center;
+  font-size: 16px;
+  display: none;
+}
+
+#factor-wrap {
+  margin-left: 200px;
+  margin-right: 200px;
+  display: flex;
+  flex-direction: row;
+}
+
+#button-div3 {
+  flex: 1;
+  order: 1;
+  display: none;
+  width: 100px;
+  margin-top: 18px;
+  margin-right: 10px;
+  margin-bottom: 50px;
+}
+
+#button-div4 {
+  flex: 1;
+  order: 2;
+  display: none;
+  width: 100px;
+  margin-top: 18px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+
+#button-div5 {
+  flex: 1;
+  order: 3;
+  display: none;
+  width: 100px;
+  margin-top: 18px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+
+#button-div6 {
+  flex: 1;
+  order: 4;
+  display: none;
+  width: 100px;
+  margin-top: 18px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+
+#button-div7 {
+  flex: 1;
+  order: 5;
+  display: none;
+  width: 100px;
+  margin-top: 18px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+
+#button-div8 {
+  flex: 1;
+  order: 6;
+  display: none;
+  width: 100px;
+  margin-top: 18px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+
+
+#title {
+  display: none;
+}
+
+#click {
+  text-align: left;
+  font-size: 16px;
+  float: right;
+  margin-right: 150px;
+  margin-bottom: 10px;
+  display: none;
+}
+
+#company-profile {
+  height: 560px;
+  float: right;
+  margin-right: 40px;
+  display: none;
+  border: 2px solid white;
+  color: #191C24;
+}
+
+
+#bubble-wrap {
+  display: flex;
+  flex-direction: row;
+}
+
+#chart {
+  flex: 1;
+  order: 1;
+  margin-left: 0px;
+  padding: 0px;
+}
+
+#legend2 {
+  margin-top: 20px;
+  margin-left: 200px;
+}
+
+#company-profile {
+  flex: 1;
+  order: 2;
+  margin-right: 0px;
+  padding: 0px;
+}
+
+#img {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#name {
+  color: #C8C4C9;
+}
+
+#wrap1 {
+  display: flex;
+  flex-direction: row;
+}
+
+#logo-name {
+  flex: 1;
+  order: 1;
+  padding: 0px;
+}
+
+#values {
+  margin-top: 35px;
+  flex: 1;
+  order: 2;
+  padding: 0px;
+}
+
+#percent {
+  color: #73F15A;
+}
+
+#emp {
+  font-weight: bold;
+  text-align: left;
+  margin-left: 70px;
+  padding: 0px;
+}
+
+#biz {
+  font-weight: bold;
+  text-align: left;
+  margin-left: 70px;
+  padding: 0px;
+}
+
+#satis {
+  font-weight: bold;
+  text-align: left;
+  margin-left: 70px;
+  padding: 0px;
+}
+
+.diversity-wrap {
+  display: flex;
+  flex-direction: row;
+}
+
+#female {
+  margin-left: 70px;
+  flex: 1;
+  order: 1;
+}
+
+#male {
+  margin-left: 30px;
+  flex: 2;
+  order: 2;
+}
+
+#minority {
+  margin-right: 60px;
+  flex: 2;
+  order: 3;
+}
+
+#roi {
+  margin-left: 70px;
+  flex: 1;
+  order: 1;
+}
+
+#investors {
+  margin-left: 30px;
+  flex: 2;
+  order: 2;
+}
+
+#acquire {
+  margin-right: 60px;
+  flex: 2;
+  order: 3;
+}
+
+#glassdoor {
+  margin-left: 70px;
+  flex: 1;
+  order: 1;
+}
+
+#recommend {
+  margin-left: 30px;
+  flex: 2;
+  order: 2;
+}
+
+#ceo {
+  margin-right: 60px;
+  flex: 2;
+  order: 3;
+}
+
+#info {
+  display: none;
+}
